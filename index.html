@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<!--
+/*********************************************************************
+ *                          TMR HTML                                 *
+ * Created on  : 18 fév. 2016, 11:29:41                              *
+ * Author      : Cyol http://cyol.fr/blog                            *
+ * Licence     : CC BY                                               *
+ * Version     : 21                                                 *
+ *********************************************************************/
+-->
+<html manifest="offline.manifest">
+    <head>
+        <title>Les Terres Médianes du Rêve, une aide de jeu pour le Jeu de Rôle Rêve de Dragon</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="description" content="Les Terres Médianes du Rêve, une aide de jeu pour le Jeu de Rôle Rêve de Dragon en HTML/CSS/JS">
+        <meta name="keywords" content="HTML, CSS, JavaScript, game, boardgame, TMD, RDD, Rêve de Dragon, Magie, Jeu de Rôle, Aide de jeu">
+        <meta name="author" content="Cyol">
+        <script src="js/jquery-2.2.1.min.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        <script src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script src="js/jquery.ui.touch-punch.min.js"></script>
+        <script src="js/tmrHexagon.js"></script>
+        <script src="js/tmr.js"></script>
+        <link rel="shortcut icon" href="img/logo-rdd.ico">
+        <link rel="stylesheet" href="css/html5-doctor-reset-stylesheet.min.css" />
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+        <link rel="stylesheet" href="css/tmr.css" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-touch-fullscreen" content="yes">
+        <link href="img/logo-rdd.png" rel="apple-touch-icon">
+    </head>
+    <body class="ui-mobile-viewport ui-overlay-aui-overlay-a">
+        <!-- Page d'outils -->
+        <div id="Outils" data-role="page" data-theme="b">
+            <div data-role="header" data-position="fixed" data-theme="b">
+                <div class="ui-btn-left">
+                    <a href="http://scriptarium.fr/reve-de-dragon/" target="_blank"><img src="img/LogoRDD.png" alt="logo Rêve de Dragon" /></a>
+                </div>
+                <h1>Les Terres Médianes du Rêve : Outils</h1>
+                <div class="ui-btn-right">
+                    <a href="javascript:location.reload()" class="recharger ui-btn ui-icon-refresh ui-btn-icon-notext ui-corner-all ui-shadow ui-btn-inline" title="Recharger"></a>
+                    <a href="#TMR" data-transition="slide" class="btnTMR ui-btn ui-icon-arrow-u ui-btn-icon-left ui-corner-all ui-shadow ui-btn-inline" title="Outils">TMR</a>
+                    <a  href="#Infos" data-transition="slide" class="btnInfos ui-btn ui-icon-info ui-btn-icon-left ui-corner-all ui-shadow ui-btn-inline" title="Informations">Informations</a>
+                </div>
+            </div>
+            <div id="outilPourcentage" class="outil">
+                <div class="ui-field-contain">
+                    <label for="caracteristique">Caractéristique</label>
+                    <input name="caracteristique" id="caracteristique" min="6" max="30" value="10" type="range" data-highlight="true">
+                </div>
+                <div class="ui-field-contain">
+                    <label for="competence">Compétence</label>
+                    <input name="competence" id="competence" min="-11" max="11" value="0" type="range" data-highlight="true">
+                </div>
+                <div class="ui-field-contain">
+                    <label for="bonusMalus">Bonus/malus</label>
+                    <input name="bonusMalus" id="bonusMalus" min="-10" max="4" value="0" type="range" data-highlight="true">
+                </div>
+                <div id="multi-rangeslider">
+                    <label for="echecTotal">Echec Total >=</label>
+                    <input name="echecTotal" id="echecTotal" min="0" max="100" value="" type="range" data-show-value="true" disabled="disabled"  data-highlight="true">
+                    <label for="echecParticulier">Echec particulier >=</label>
+                    <input name="echecParticulier" id="echecParticulier" min="0" max="100" value="" type="range" data-show-value="true" disabled="disabled" data-highlight="true">
+                    <label for="pourcentage"><strong>Réussite <=</strong></label>
+                    <input name="pourcentage" id="pourcentage" min="0" max="100" value="" type="range" data-show-value="true" data-highlight="true" disabled="disabled">
+                    <label for="significative">Significative <=</label>
+                    <input name="significative" id="significative" min="0" max="100" value="" type="range" data-show-value="true" data-highlight="true" disabled="disabled">
+                    <label for="particuliere">Particulière <=</label>
+                    <input name="particuliere" id="particuliere" min="0" max="100" value="" type="range" data-show-value="true" data-highlight="true" disabled="disabled">
+                </div>
+                <div class="ui-field-contain">
+                    <a id="boutonJetResolution" href="javascript:lanceD100()" data-role="button" data-icon="refresh" data-inline="true" title="Recharger">Résolution</a>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="jetResolution">Jet de résolution</label>
+                    <input name="jetResolution" id="jetResolution" value="" type="text" disabled="">
+                </div>
+                <div class="ui-field-contain">
+                    <label for="jetResultat">Résultat</label>
+                    <input name="jetResultat" id="jetResultat" value="" type="text" disabled="">
+                </div>
+                <div class="ui-field-contain">
+                    <label for="jetTache">Points de Tâches</label>
+                    <input name="jetTache" id="jetTache" value="" type="text" disabled="">
+                </div>
+                <div class="ui-field-contain">
+                    <label for="jetQualite">Qualité</label>
+                    <input name="jetQualite" id="jetQualite" value="" type="text" disabled="">
+                </div>
+            </div>
+            <div id="outilTMR" class="outil">
+                <div class="ui-field-contain">
+                    <label for="demireveAleatoire">Demi-Rêve Aléatoire</label>
+                    <input name="demireveAleatoire" id="demireveAleatoire" value="" type="text" disabled="">
+                    <a id="boutonDemireveAleatoire" href="javascript:demireveAleatoire()" data-role="button" data-icon="refresh" data-inline="true" title="Recharger">Un autre</a>
+                </div>
+            </div>
+            <div id="outilDes" class="outil">
+                <div class="ui-grid-a">
+                    <div class="ui-block-a">
+                        <div class="ui-field-contain">
+                            <label for="d100">D100</label>
+                            <input name="d100" id="d100" value="" type="text" disabled="">
+                            <a id="boutonD100" href="javascript:lanceD100()" data-role="button" data-icon="refresh" data-inline="true" title="Recharger">Lancer</a>
+                        </div>
+                    </div>
+                    <div class="ui-block-b">
+                        <div class="ui-field-contain">
+                            <label for="ddr">D Draconique</label>
+                            <input name="ddr" id="ddr" value="" type="text" disabled="">
+                            <a id="boutonDDr" href="javascript:lanceDdr()" data-role="button" data-icon="refresh" data-inline="true" title="Recharger">Lancer</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-grid-solo">
+                    <div class="ui-block-a">
+                        <div class="ui-field-contain" id="dSelect">
+                            <label for="select-d"></label>
+                            <select name="select-d" id="select-d">
+                                <option value="2">D2</option>
+                                <option value="3">D3</option>
+                                <option value="4">D4</option>
+                                <option value="6" selected="selected">D6</option>
+                                <option value="7">D7</option>
+                                <option value="8">D8</option>
+                                <option value="10">D10</option>
+                                <option value="12">D12</option>
+                                <option value="20">D20</option>
+                            </select>
+                            <label for="d"></label>
+                            <input name="d" id="d" value="" type="text" disabled="">
+                            <a id="boutonDSelect" href="javascript:lanceDSelect()" data-role="button" data-icon="refresh" data-inline="true" title="Recharger">Lancer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="outilStress" class="outil">
+                <div class="ui-field-contain">
+                    <label for="ptsStress">Points de Stress</label>
+                    <input name="ptsStress" id="ptsStress" min="1" max="20" value="5" type="range" data-highlight="true">
+                </div>
+                <div class="ui-field-contain">
+                    <label for="ptsReves">Points de Rêves</label>
+                    <input name="ptsReves" id="ptsReves" min="0" max="40" value="11" type="range" data-highlight="true">
+                </div>
+                <div class="ui-grid-b ui-responsive">
+                    <div class="ui-block-a">
+                        <div class="ui-field-contain">
+                            <label for="vocation">Compétences de Vocation</label>
+                            <select name="vocation" id="vocation" data-role="slider">
+                                <option value="0">Non</option>
+                                <option value="1">Oui</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="ui-block-b">
+                        <div class="ui-field-contain">
+                            <a id="boutonJetStress" href="javascript:lanceJetStress()" data-role="button" data-icon="refresh" data-inline="true" title="Recharger">Lancer un jet de Stress</a>
+                        </div>
+                    </div>
+                    <div class="ui-block-c">
+                        <div class="ui-field-contain">
+                            <label for="stressTransforme">Stress transformé en expérience :<br /><span id="infosStress"></span></label>
+                            <input name="stressTransforme" id="stressTransforme" value="" type="text" disabled="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="outilAstrologie" class="outil">
+                <div class="ui-field-contain">
+                    <label for="nbAstral">
+                        Nombre Astral du jour
+                        <a id="boutonNbAstral" href="javascript:lanceNbAstral()" data-role="button" data-icon="refresh" data-inline="true" title="Recharger">Au hasard</a>
+                    </label>
+                    <input name="nbAstral" id="nbAstral" min="1" max="12" value="6" type="range" data-highlight="true">
+                </div>
+                <div class="ui-field-contain">
+                    <fieldset data-role="controlgroup" data-type="horizontal" id="blocHeureNaissance">
+                        <legend>Heure de naissance</legend>
+                        <input name="heureNaissance" id="heureNaissance1" value="1" type="radio" checked="checked" />
+                        <label for="heureNaissance1" data-rel="tooltip" title="Heure du Vaisseau">
+                            <img src="img/rddHeureVaisseau.png" title="Heure du Vaisseau">
+                        </label>
+                        <input name="heureNaissance" id="heureNaissance2" value="2" type="radio" />
+                        <label for="heureNaissance2" data-rel="tooltip" title="Heure de la Sirène">
+                            <img src="img/rddHeureSirene.png" title="Heure de la Sirène">
+                        </label>
+                        <input name="heureNaissance" id="heureNaissance3" value="3" type="radio" />
+                        <label for="heureNaissance3" data-rel="tooltip" title="Heure du Faucon">
+                            <img src="img/rddHeureFaucon.png" title="Heure du Faucon">
+                        </label>
+                        <input name="heureNaissance" id="heureNaissance4" value="4" type="radio" />
+                        <label for="heureNaissance4" data-rel="tooltip" title="Heure de la Couronne">
+                            <img src="img/rddHeureCouronne.png" title="Heure de la Couronne">
+                        </label>
+                        <input name="heureNaissance" id="heureNaissance5" value="5" type="radio" />
+                        <label for="heureNaissance5" data-rel="tooltip" title="Heure du Dragon">
+                            <img src="img/rddHeureDragon.png" title="Heure du Dragon">
+                        </label>
+                        <input name="heureNaissance" id="heureNaissance6" value="6" type="radio" />
+                        <label for="heureNaissance6" data-rel="tooltip" title="Heure des Épées">
+                            <img src="img/rddHeureEpees.png" title="Heure des Épées">
+                        </label>
+                        <input name="heureNaissance" id="heureNaissance7" value="7" type="radio" />
+                        <label for="heureNaissance7" data-rel="tooltip" title="Heure de la Lyre">
+                            <img src="img/rddHeureLyre.png" title="Heure de la Lyre">
+                        </label>
+                        <input name="heureNaissance" id="heureNaissance8" value="8" type="radio" />
+                        <label for="heureNaissance8" data-rel="tooltip" title="Heure du Serpent">
+                            <img src="img/rddHeureSerpent.png" title="Heure du Serpent">
+                        </label>
+                        <input name="heureNaissance" id="heureNaissance9" value="9" type="radio" />
+                        <label for="heureNaissance9" data-rel="tooltip" title="Heure du Poisson Acrobate">
+                            <img src="img/rddHeurePoissonAcrobate.png" title="Heure du Poisson Acrobate">
+                        </label>
+                        <input name="heureNaissance" id="heureNaissance10" value="10" type="radio" />
+                        <label for="heureNaissance10" data-rel="tooltip" title="Heure de l'Araignée">
+                            <img src="img/rddHeureAraignee.png" title="Heure de l'Araignée">
+                        </label>
+                        <input name="heureNaissance" id="heureNaissance11" value="11" type="radio" />
+                        <label for="heureNaissance11" data-rel="tooltip" title="Heure du Roseau">
+                            <img src="img/rddHeureRoseau.png" title="Heure du Roseau">
+                        </label>
+                        <input name="heureNaissance" id="heureNaissance12" value="12" type="radio" />
+                        <label for="heureNaissance12" data-rel="tooltip" title="Heure du Chateau Dormant">
+                            <img src="img/rddHeureChateauDormant.png" title="Heure du Chateau Dormant">
+                        </label>
+                    </fieldset>
+                </div>
+                <canvas id="AstrologieCanvas" width="500" height="500" style="background-color:#1d1d1d"></canvas>
+
+            </div>
+        </div>
+        <!-- Page du TMR -->
+        <div id="TMR" data-role="page" data-theme="b">
+            <div data-role="header" data-position="fixed" data-theme="b">
+                <div class="ui-btn-left">
+                    <a href="http://scriptarium.fr/reve-de-dragon/" target="_blank"><img src="img/LogoRDD.png" alt="logo Rêve de Dragon" /></a>
+                    <a id="start" href="#" class="ui-btn ui-corner-all ui-icon-star ui-btn-icon-left ui-shadow ui-btn-inline">Démarrer</a>
+                </div>
+                <h1>Les Terres Médianes du Rêve : TMR</h1>
+                <div class="ui-btn-right">
+                    <a href="javascript:location.reload()" class="recharger ui-btn ui-icon-refresh ui-btn-icon-notext ui-corner-all ui-shadow ui-btn-inline" title="Recharger"></a>
+                    <a href="#Outils" data-transition="slide" class="btnOutils ui-btn ui-icon-gear ui-btn-icon-left ui-corner-all ui-shadow ui-btn-inline" title="Outils">Outils</a>
+                    <a href="#Infos" data-transition="slide" class="btnInfos ui-btn ui-icon-info ui-btn-icon-left ui-corner-all ui-shadow ui-btn-inline" title="Informations">Informations</a>
+                </div>
+            </div>
+            <div data-role="content" class="ui-content" data-theme="b">
+                <div id="aideTMR" class="ui-grid-b responsive-grid ui-responsive">
+                    <div id="aideTMRBtn">Aide</div>
+                    <ul id="aideTMRInfos">
+                        <li>Cliquez sur Démarrer en haut à gauche pour afficher la carte des TMR</li>
+                        <li>Déterminez sur quelle case est le Demi-rêve en cliquant sur la carte des TMR</li>
+                        <li>Ajustez vos différentes valeurs</li>
+                        <li>Montez dans les TMR</li>
+                        <li>Parcourez les TMR jusqu'à votre but !</li>
+                    </ul>
+                </div>
+                <div id="plateauTMR" class="ui-grid-b responsive-grid ui-responsive">
+                    <canvas id="HexCanvas" width="900" height="1000"></canvas>
+                    <div id="informations">
+                        <div id="infosHautRevant">
+                            <div class="ui-field-contain">
+                                <label for="demireve">Demi-Rêve</label>
+                                <input name="demireve" id="demireve" value="" type="text" data-clear-btn="true" disabled="">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="endurance">Endurance Max</label>
+                                <input name="endurance" id="endurance" min="16" max="30" value="23" type="range" data-highlight="true">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="fatigue">Fatigue</label>
+                                <input name="fatigue" id="fatigue" min="0" max="60" value="0" type="range" data-highlight="true">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="etat">Etat général</label>
+                                <input name="etat" id="etat" min="-10" max="0" value="0" type="range" data-highlight="true">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="draconic">Meilleure Voie Draconique</label>
+                                <input name="draconic" id="draconic" min="-10" max="15" value="2" type="range" data-highlight="true">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="reve">Rêve</label>
+                                <input name="reve" id="reve" min="0" max="40" value="11" type="range" data-highlight="true">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="refoulement">Refoulement</label>
+                                <input name="refoulement" id="refoulement" min="0" max="19" value="0" type="range" data-highlight="true">
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="deplacement">Déplacement</label>
+                                <select name="deplacement" id="deplacement" data-role="slider">
+                                    <option value="0">Normal</option>
+                                    <option value="1">Rapide</option>
+                                </select>
+                            </div>
+                            <div class="ui-field-contain">
+                                <label for="rencontresAlternatives"><a href="http://www.monpetitcoin.com/omnireve/regles/regles_newtmr.html" target="_blank">Rencontres alternatives</a></label>
+                                <select name="rencontresAlternatives" id="rencontresAlternatives" data-role="slider">
+                                    <option value="0">Non</option>
+                                    <option value="1">Oui</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div id="voyageEnTMR"></div>
+                        <input value="Monter en TMR" type="button" name="monteTMR" id="monteTMR" disabled="">
+                    </div>
+                </div>
+            </div>
+            <!-- Popups -->
+            <!-- Popup rencontre -->
+            <div data-role="popup" id="popupRencontre" data-disabled="false" data-shadow="true" data-corners="true" data-transition="fade" data-dismissible="false" data-history="false" data-overlay-theme="b" data-theme="b" class="popup-draggable">
+                <div data-role="header">
+                    <h1>Rencontre</h1>
+                </div>
+                <div class="ui-content" data-role="content">
+                    <div id="popupRencontreContent">
+                    </div>
+                    <a id="maitriser" href="#" class="actionRencontre ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back" data-transition="flow">
+                        Maîtriser <span id="chanceMaitrise"></span>
+                    </a>
+                    <a id="seDerober" href="#" class="actionRencontre ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back" data-transition="flow">
+                        Se dérober
+                    </a>
+                    <a id="refouler" href="#" class="actionRencontre ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back" data-transition="flow">
+                        Refouler
+                    </a>
+                </div>
+            </div>
+            <!-- Popup Rencontre Maitrisée -->
+            <div data-role="popup" id="popupRencontreMaitrise" data-disabled="false" data-shadow="true" data-corners="true" data-transition="fade" data-dismissible="false" data-history="false" data-overlay-theme="b" data-theme="b" class="popup-draggable">
+                <div data-role="header">
+                    <h1>Rencontre Maîtrisée</h1>
+                </div>
+                <div class="ui-content" data-role="content">
+                    <div id="popupRencontreMaitriseContent">
+                    </div>
+                    <canvas id="MaitriseCanvas" width="200" height="200"></canvas>
+                </div>
+            </div>
+            <!-- Popup Perdu -->
+            <div data-role="popup" id="popupPerdu" data-disabled="false" data-shadow="true" data-corners="true" data-transition="fade" data-dismissible="false" data-history="false" data-overlay-theme="b" data-theme="b" class="popup-draggable">
+                <div data-role="header">
+                    <h1>Perdu dans les TMRs</h1>
+                </div>
+                <div class="ui-content" data-role="content">
+                    <div id="popupPerduContent">
+                    </div>
+                    <canvas id="PerduCanvas" width="200" height="200"></canvas>
+                </div>
+                <input value="Descendre des TMR" type="button" name="perduDescendreTMR" id="perduDescendreTMR">
+            </div>
+            <!-- Popup infos -->
+            <div data-role="popup" id="popupInfos" data-disabled="false" data-shadow="true" data-corners="true" data-transition="fade" data-dismissible="false" data-history="false" data-overlay-theme="b" data-theme="b" class="popup-draggable">
+                <div data-role="header">
+                    <h1>Informations</h1>
+                </div>
+                <div class="ui-content" data-role="content">
+                    <div id="popupInfosContent">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- Page d'infos -->
+        <div id="Infos" data-role="page" data-theme="b">
+            <div data-role="header" data-position="fixed">
+                <div class="ui-btn-left">
+                    <a href="http://scriptarium.fr/reve-de-dragon/" target="_blank"><img src="img/LogoRDD.png" alt="logo Rêve de Dragon" /></a>
+                </div>
+                <h1 class="titreJeu">
+                    Les Terres Médianes du Rêve : Informations
+                </h1>
+                <div class="ui-btn-right">
+                    <a href="#Outils" data-transition="slide" class="btnOutils ui-btn ui-icon-gear ui-btn-icon-left ui-corner-all ui-shadow ui-btn-inline" title="Outils">Outils</a>
+                    <a href="#TMR" data-transition="slide" class="btnTMR ui-btn ui-icon-arrow-u ui-btn-icon-left ui-corner-all ui-shadow ui-btn-inline" title="Outils">TMR</a>
+                </div>
+            </div>
+            <div data-role="content">
+                <a href="http://scriptarium.fr/reve-de-dragon/" target="_blank"><img src="img/LogoRDD.png" alt="logo Rêve de Dragon" /></a>
+                <h2>Inspiration :</h2>
+                <p>
+                    <b><i>"Les Terres Médianes du Rêve"</i></b> est une aide de jeu pour le jeu de rôle <a href="http://www.legrog.org/jeux/reve-the-dream-ouroboros" target="_blank">Rêve de Dragon</a>.
+                </p>
+                <p>
+                    Les outils de cette aide de jeu sont basés sur les règles de la 2ème édition de <a href="http://www.legrog.org/jeux/reve-the-dream-ouroboros" target="_blank">Rêve de Dragon</a>.
+                </p>
+                <p>
+                    Les Rencontres Alternatives dans les TMR sont tirée de l'aide de jeu <a href="http://www.monpetitcoin.com/omnireve/regles/regles_newtmr.html" target="_blank">"Faire du Vieux avec du Neuf"</a> du Tinkle Bavard n°8, récupéré sur <a href="http://www.monpetitcoin.com/omnireve/" target="_blank">L'Omnirêve</a>.
+                </p>
+                <h2>Développement :</h2>
+                <p>
+                    HTML, CSS, JS : Cyol ( <a href="http://cyol.fr/blog">http://cyol.fr/blog</a> | <a href="https://twitter.com/CyolFalcon/" target="_blank">@CyolFalcon sur Twitter</a> )
+                </p>
+                <h2>Autres :</h2>
+                <ul>
+                    <li>Ce logiciel utilise les bibliothèques : <a href="http://jquery.com/" target="_blank">jQuery 1.2.1</a>, <a href="http://jqueryui.com/" target="_blank">jQuery UI 1.11.4</a>, <a href="http://jquerymobile.com/" target=_blank>jQuery mobile 1.4.5</a>, <a href="http://touchpunch.furf.com/" target="_blank">jQuery UI Touch Punch 0.2.3</a></li>
+                    <li>La génération de la carte des TMR (à venir) est une adaptation de la bibliothèque <a href="https://github.com/rrreese/Hexagon.js" target="_blank">Hexagon.js</a></li>
+                    <li>Le fond parcheminé des TMR vient de <a href="https://pixabay.com/" target="_blank">https://pixabay.com/</a></li>
+                    <li>Les illustrations des TMRs viennent de la 2ème édition de Rêve de Dragon</li>
+                </ul>
+                <h2>Remerciements :</h2>
+                <ul>
+                    <li><a href="https://twitter.com/9vies" target="_blank">@9vies</a>, qui me suit dans mes élucubrations ludiques (même si elle pourrait faire un effort coté #JdR :p)</li>
+                    <li><a href="http://podcast.proxi-jeux.fr/" target="_blank">Proxi-jeux</a>, le podcast sur les jeux de société.</li>
+                    <li>Les amis du <a href="http://chat.proxi-jeux.fr/" target="_blank">chat Proxi-Jeux</a>.</li>
+                    <li>Denis Gerfaud, l'auteur de <a href="http://www.legrog.org/jeux/reve-the-dream-ouroboros" target="_blank">Rêve de Dragon</a>.</li>
+                    <li>Le <a href="http://scriptarium.fr/fr/" target="_blank">Scriptorium</a> pour avoir relancé Rêve de Dragon avec la campagne <a href="http://fr.ulule.com/revededragon/" target="_blank">"A la Claire Fontaine"</a>.</li>
+                    <li><a href="http://www.reves-d-ailleurs.eu/forum/reve-de-dragon.html" target="_blank">Rêves d'Ailleurs</a> pour la mise à disposition des versions scans pdfs du jeu avec l'accord de Denis Gerfaud.</li>
+                </ul>
+                <h2>Sources :</h2>
+                <p>Vous pouvez récupérer l'intégralité des sources utilisées dans le zip : <a href="rdd.zip" target="_blank">télécharger les sources</a></p>
+            </div>
+
+            <div data-role="footer" data-position="fixed">
+                <div data-role="none" class="ui-btn-left social">
+                    <!-- Flattr -->
+                    <script id='fbe9yea'>(function(i) {
+                        var f, s = document.getElementById(i);
+                        f = document.createElement('iframe');
+                        f.src = '//api.flattr.com/button/view/?uid=Cyol&button=compact&title=Terres Médianes du Rêve&description=Aide de jeu pour le Jeu de rôles Rêve de Dragon& language=fr&url=' + encodeURIComponent(document.URL);
+                        f.title = 'Flattr';
+                        f.height = 20;
+                        f.width = 110;
+                        f.style.borderWidth = 0;
+                        s.parentNode.insertBefore(f, s);
+                    })('fbe9yea');</script>
+                    <!-- Twitter -->
+                    <script>!function(d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+                        if (!d.getElementById(id)) {
+                            js = d.createElement(s);
+                            js.id = id;
+                            js.src = p + '://platform.twitter.com/widgets.js';
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }
+                    }(document, 'script', 'twitter-wjs');</script>
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-via="CyolFalcon" data-lang="fr">Tweet</a>
+                    <!-- Google+. -->
+                    <div class="g-plusone" data-size="medium" data-href="http://cyol.fr/rdd/">G+</div>
+                    <script type="text/javascript">
+                      window.___gcfg = {lang: 'fr'};
+
+                      (function() {
+                          var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                          po.src = 'https://apis.google.com/js/platform.js';
+                          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                      })();
+                    </script>
+                </div>
+                <div data-role="none" class="licence">
+                    <a rel="license" href="http://creativecommons.org/licenses/by/3.0/fr/" ><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/fr/80x15.png" /></a> <a href="http://cyol.fr/blog/" rel="external">Cyol</a> : version 22, 11/01/2017<br />
+                    <span class="textLicence">Cette aide de jeu est mise à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by/3.0/fr/">Licence Creative Commons Attribution 3.0 France</a>.
+                    </span>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
