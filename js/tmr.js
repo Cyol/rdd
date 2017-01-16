@@ -1540,7 +1540,7 @@ function rencontreNouvelleCase()
                 break;
         }
         logVoyage(rencontreActive.text);
-        var difficulte = parseInt($cptDraconic.val()) + parseInt($cptEtat.val())-rencontreActive.force;
+        var difficulte = parseInt($cptDraconic.val()) + parseInt($cptEtat.val()) - rencontreActive.force;
         var chanceMaitrise = Math.min(99,getPourcentageChance(parseInt($cptReve.val()), difficulte));
         $("#chanceMaitrise").html( chanceMaitrise + "%");
         $("#popupRencontre").popup({ dismissible: false }).popup("open", 'positionTo: #plateauTMR');
@@ -1556,12 +1556,12 @@ function maitriseNouvelleCase()
 {
     //réinitialisation de la rencontreActive
     rencontreActive = {};
-    //Maitrise de case humide diff 7
     var idHexaClique = getHexagoneIdParCoordonnees(positionJoueur.x, positionJoueur.y);
     if($.inArray(hexagones[idHexaClique].oH_type, terrainsHumides) > -1)
     {
+        //Maitrise de case humide diff 7 et état
         logVoyage("Terrain Humide, test de maîtrise à difficultée 7");
-        var difficulte = parseInt($cptDraconic.val())-7;
+        var difficulte = parseInt($cptDraconic.val()) + parseInt($cptEtat.val()) - 7;
         var chancesMaitrise = getPourcentageChance($cptReve.val(), difficulte);
         logVoyage("Test de Maîtrise : " + chancesMaitrise + "%");
         var jetMaitrise = lanceD(1, 100);
