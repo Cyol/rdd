@@ -1427,7 +1427,8 @@ function monteTMR()
     etatDeDepart = parseInt($cptEtat.val());
     fatigueDeDepart = parseInt($cptFatigue.val());
 
-    //@TODO Recalcul de l'état de départ pour ne pas prendre la fatigue de départ dedans.
+    var etatDeFatigue = calculEtatSelonFatigue();
+    etatDeDepart = Math.min(0, etatDeDepart + Math.abs(etatDeFatigue));
 
     //Vitesse de déplacement
     vitesseDeplacement = parseInt($deplacement.val());
@@ -1618,11 +1619,9 @@ function suiteVoyage()
     }
 }
 
-function augmentationFatigue()
+function calculEtatSelonFatigue()
 {
-    logVoyage("Fatigue +1.");
     var fatigue = parseInt($cptFatigue.val()) + 1;
-    $cptFatigue.val(fatigue).slider('refresh');
     //Comparaison Fatigue à Seuil, info dispo Endurance
     var endurance = parseInt($cptEndurance.val());
     //Etat0
@@ -1685,6 +1684,17 @@ function augmentationFatigue()
             }
         }
     }
+    return etat;
+}
+
+function augmentationFatigue()
+{
+    logVoyage("Fatigue +1.");
+    var fatigue = parseInt($cptFatigue.val()) + 1;
+    $cptFatigue.val(fatigue).slider('refresh');
+    //Comparaison Fatigue à Seuil, info dispo Endurance
+    var endurance = parseInt($cptEndurance.val());
+    var etat = calculEtatSelonFatigue();
     var nouvelleValeurEtat = etatDeDepart+etat;
     if(nouvelleValeurEtat !== parseInt($cptEtat.val()))
     {

@@ -128,6 +128,11 @@ input[type=number] {
     text-align: center;
 }
 
+#popupPerdu .ui-btn{
+    width: 70%;
+    margin: 0 auto 0.5em;
+}
+
 #HexCanvas,
 #PerduCanvas,
 #MaitriseCanvas{
@@ -692,6 +697,10 @@ div[data-role=footer] .ui-btn-left{
 
     #informations{
         width: 35em;
+    }
+
+    #informations .labelLong>.ui-slider{
+        margin-top: 1em;
     }
 
     #blocHeureNaissance label{
