@@ -1407,6 +1407,7 @@ function clickPerdu(e)
 
 function monteTMR()
 {
+    console.log("monte TMR function");
     enTMR = true;
     roundEnTMR = 1;
     $infosVoyageEnTMR.empty();
@@ -2609,8 +2610,11 @@ $( document).on("pageshow","#Outils", function() {
     demireveAleatoire();
     lanceDdr();
     lanceDSelect();
-    lanceJetStress();
     $("#select-d").change(lanceDSelect);
+    lanceJetStress()
+    $("#ptsStress").change(lanceJetStress);
+    $("#ptsReves").change(lanceJetStress);
+    $("#vocation").change(lanceJetStress);
     //Mise en place du canvas : AstrologieCanvas
     canvasAstrologie = document.getElementById("AstrologieCanvas");
     contextAstrologie = canvasAstrologie.getContext("2d");
