@@ -135,26 +135,53 @@ input[type=number] {
 
 #HexCanvas,
 #PerduCanvas,
-#MaitriseCanvas{
+#MaitriseCanvas,
+#listeCasesChangeur .ui-body{
     background: url(../img/fond.jpg);
+    border-radius: 0.3125em;
 }
 
 #MaitriseCanvas{
     display:none;
 }
 
-.listeCases{
+#listeCasesChangeur{
     width: 31.25em;
 }
 
-.listeCases .ui-body{
+#listeCasesChangeur .ui-body{
     margin: 0 auto;
 }
 
-.listeCases .grid>div,
-.listeCases .grid>div .ui-btn{
-    min-height: 3.5em;
+#listeCasesChangeur .grid>div,
+#listeCasesChangeur .grid>div .ui-btn{
+    min-height: 4em;
     min-width: 6.25em;
+}
+
+#listeCasesChangeur .ui-grid-c .ui-block-a:first-of-type{
+    border-top-left-radius: 0.3125em;
+}
+
+#listeCasesChangeur .ui-grid-c .ui-block-d:nth-child(4){
+    border-top-right-radius: 0.3125em;
+}
+
+#listeCasesChangeur .ui-block-a.derniereLigne{
+    border-bottom-left-radius: 0.3125em;
+}
+
+#listeCasesChangeur .grid div.derniereLigne:last-of-type{
+    border-bottom-right-radius: 0.3125em;
+}
+
+#listeCasesChangeur label{
+    border-radius: inherit;
+    text-align: center;
+}
+
+#listeCasesChangeur .derniereLigne label{
+    border-bottom: 1px;
 }
 
 /* Outils */

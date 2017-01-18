@@ -1407,7 +1407,6 @@ function clickPerdu(e)
 
 function monteTMR()
 {
-    console.log("monte TMR function");
     enTMR = true;
     roundEnTMR = 1;
     $infosVoyageEnTMR.empty();
@@ -1447,11 +1446,15 @@ function monteTMR()
     arriveNouvelleCase();
 }
 
-function infoDemireve(x, y, estPerdu)
+function infoDemireve(x, y, estPerdu, passageLigne)
 {
     if(typeof estPerdu === "undefined")
     {
         estPerdu = perdu;
+    }
+    if(typeof passageLigne === "undefined")
+    {
+        passageLigne = false;
     }
     if(hexagones.length === 0)
     {
@@ -1471,7 +1474,13 @@ function infoDemireve(x, y, estPerdu)
     }
     else
     {
-        return notationX[x] + notationY[y] + " : " + typeTerrainHexagoneDemiReve.nom + " " + $hexagoneDemiReve.oH_nom;
+        var retour = notationX[x] + notationY[y] + " : ";
+        if(passageLigne)
+        {
+            retour += "<br />";
+        }
+        retour += typeTerrainHexagoneDemiReve.nom + " " + $hexagoneDemiReve.oH_nom;
+        return retour;
     }
 }
 
@@ -1834,7 +1843,7 @@ function maitriseBrouillard()
 {
     var difficulte = parseInt($cptDraconic.val()) + parseInt($cptEtat.val())-brouillardActif;
     var chancesMaitrise = getPourcentageChance(parseInt($cptReve.val()), difficulte);
-    logVoyage("Test de maîtrise (Pts Rêve " + $cptReve.val() + "/ Draconique " + $cptDraconic.val() + " &Eacute;tat " + $cptEtat.val() + " Diff -" + brouillardActif + ") : " + Math.min(99,chancesMaitrise) + "%");
+    logVoyage("Test de maîtrise du Brouillard (Pts Rêve " + $cptReve.val() + "/ Draconique " + $cptDraconic.val() + " &Eacute;tat " + $cptEtat.val() + " Diff -" + brouillardActif + ") : " + Math.min(99,chancesMaitrise) + "%");
     var jetMaitrise = lanceD(1, 100);
     logVoyage("Jet de maîtrise  : " + jetMaitrise);
     if(jetMaitrise <= chancesMaitrise && jetMaitrise <100)
@@ -2056,19 +2065,25 @@ function rencontreMaitrisee(particuliere)
             //Case Humide à maitriser
             //On traite ça dans réponse à popup
             var contentMaitriseChangeur = "<div class='ui-field-contain'>";
-            contentMaitriseChangeur += "<fieldset data-role='controlgroup' data-iconpos='none' class='listeCases'>";
+            contentMaitriseChangeur += "<fieldset data-role='controlgroup' data-iconpos='none' id='listeCasesChangeur'>";
             contentMaitriseChangeur += "<legend>Choisissez votre destination</legend>";
-            contentMaitriseChangeur += "<div class='ui-body ui-corner-all ui-shadow'>";
+            contentMaitriseChangeur += "<div class='ui-body'>";
             contentMaitriseChangeur += "<div class='ui-grid-c grid'>";
             var idHexagone;
             var nbParLigne = 4;
             var positionDansLigne=0;
+            var blockClass = "";
             for(var i = 0; i < listeCasesType.length; i++)
             {
                 positionDansLigne++;
                 if(positionDansLigne > 4)
                 {
                     positionDansLigne = 1;
+                    //nouvelle ligne, est-ce la dernière ?
+                    if((listeCasesType.length - i) <= 4)
+                    {
+                        blockClass = "derniereLigne";
+                    }
                 }
                 if(positionDansLigne + (listeCasesType.length - i) <= 4 && nbParLigne === 4)
                 {
@@ -2106,10 +2121,10 @@ function rencontreMaitrisee(particuliere)
                         block = "d";
                         break;
                 }
-                contentMaitriseChangeur += "<div class='ui-block-" + block + "'>";
+                contentMaitriseChangeur += "<div class='ui-block-" + block + " "+ blockClass +"'>";
 
                 contentMaitriseChangeur += "<input name='choix-destination-changeur' id='choix-destination-changeur-" + idHexagone + "' value='" + idHexagone + "' type='radio' data-mini='true'>";
-                contentMaitriseChangeur += "<label for='choix-destination-changeur-" + idHexagone + "'>" + infoDemireve(hexagones[idHexagone].oH_x, hexagones[idHexagone].oH_y) + "</label>";
+                contentMaitriseChangeur += "<label for='choix-destination-changeur-" + idHexagone + "'>" + infoDemireve(hexagones[idHexagone].oH_x, hexagones[idHexagone].oH_y, false, true) + "</label>";
                 contentMaitriseChangeur += "</div>";
 
             }
@@ -2243,7 +2258,7 @@ function rencontreNonMaitrisee(echecTotal)
                 {
                     difficulte = parseInt($cptDraconic.val()) + parseInt($cptEtat.val())-rencontreActive.force;
                     chancesMaitrise = getPourcentageChance(parseInt($cptReve.val()), difficulte);
-                    logVoyage("Test de maîtrise (Pts Rêve " + $cptReve.val() + "/ Draconique " + $cptDraconic.val() + " &Eacute;tat " + $cptEtat.val() + " diff -" + rencontreActive.force + ") : " + Math.min(99,chancesMaitrise) + "%");
+                    logVoyage("Test de maîtrise du Reflet (Pts Rêve " + $cptReve.val() + "/ Draconique " + $cptDraconic.val() + " &Eacute;tat " + $cptEtat.val() + " diff -" + rencontreActive.force + ") : " + Math.min(99,chancesMaitrise) + "%");
                     jetMaitrise = lanceD(1, 100);
                     logVoyage("Jet de maîtrise  : " + jetMaitrise);
                 }
@@ -2303,7 +2318,7 @@ function rencontreNonMaitrisee(echecTotal)
                 {
                     difficulte = parseInt($cptDraconic.val()) + parseInt($cptEtat.val())-rencontreActive.force;
                     chancesMaitrise = getPourcentageChance(parseInt($cptReve.val()), difficulte);
-                    logVoyage("Test de maîtrise (Pts Rêve " + $cptReve.val() + "/ Draconique " + $cptDraconic.val() + " &Eacute;tat " + $cptEtat.val() + " diff -" + rencontreActive.force + ") : " + Math.min(99,chancesMaitrise) + "%");
+                    logVoyage("Test de maîtrise du Tourbillon (Pts Rêve " + $cptReve.val() + "/ Draconique " + $cptDraconic.val() + " &Eacute;tat " + $cptEtat.val() + " diff -" + rencontreActive.force + ") : " + Math.min(99,chancesMaitrise) + "%");
                     jetMaitrise = lanceD(1, 100);
                     logVoyage("Jet de maîtrise  : " + jetMaitrise);
                 }
@@ -2632,11 +2647,11 @@ $( document ).on( "pageshow","#TMR", function() {
     if(!jeuEnCours){
         initGame();
     }
-    $( "#popupRencontre" ).on('click', '.actionRencontre', function () {
+    $( "#popupRencontre" ).off('click').on('click', '.actionRencontre', function () {
         actionRencontre($(this).attr("id"));
     });
 
-    $("#aideTMRBtn").on('click', function(){
+    $("#aideTMRBtn").off('click').on('click', function(){
         $("#aideTMRInfos").toggle();
     });
 });
