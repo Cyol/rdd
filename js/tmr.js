@@ -4,7 +4,7 @@
  * Author      : Cyol http://cyol.fr/blog                             *
  * Licence     : CC BY                                                *
  * Description : Fonctions générales                                  *
- * Version     : 0.1                                                  *
+ * Version     : 24                                                   *
  **********************************************************************/
 /**
  * Pour fonctionnement sans dupplication des canvas sur certains navigateurs (natif android par exemple)
