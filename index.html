@@ -56,6 +56,10 @@
                     <label for="bonusMalus">Bonus/malus</label>
                     <input name="bonusMalus" id="bonusMalus" min="-10" max="4" value="0" type="range" data-highlight="true">
                 </div>
+                <div class="ui-field-contain">
+                    <label for="bonusCase">Bonus de case (Lancer de sorts)</label>
+                    <input name="bonusCase" id="bonusCase" min="0" max="20" value="0" type="range" data-highlight="true">
+                </div>
                 <div id="multi-rangeslider">
                     <label for="echecTotal">Echec Total >=</label>
                     <input name="echecTotal" id="echecTotal" min="0" max="100" value="" type="range" data-show-value="true" disabled="disabled"  data-highlight="true">
@@ -140,7 +144,7 @@
                     <input name="ptsStress" id="ptsStress" min="1" max="20" value="5" type="range" data-highlight="true">
                 </div>
                 <div class="ui-field-contain">
-                    <label for="ptsReves">Points de Rêves</label>
+                    <label for="ptsReves">Points de Rêve</label>
                     <input name="ptsReves" id="ptsReves" min="0" max="40" value="11" type="range" data-highlight="true">
                 </div>
                 <div class="ui-grid-b ui-responsive">
@@ -302,6 +306,13 @@
                                     <option value="1">Oui</option>
                                 </select>
                             </div>
+                            <div class="ui-field-contain">
+                                <label for="perduTMR">Perdu dans les TMR</label>
+                                <select name="perduTMR" id="perduTMR" data-role="slider">
+                                    <option value="0">Non</option>
+                                    <option value="1">Oui</option>
+                                </select>
+                            </div>
 
                         </div>
                         <div id="voyageEnTMR"></div>
@@ -451,7 +462,7 @@
                     </script>
                 </div>
                 <div data-role="none" class="licence">
-                    <a rel="license" href="http://creativecommons.org/licenses/by/3.0/fr/" ><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/fr/80x15.png" /></a> <a href="http://cyol.fr/blog/" rel="external">Cyol</a> : version 24, 17/01/2017<br />
+                    <a rel="license" href="http://creativecommons.org/licenses/by/3.0/fr/" ><img alt="Licence Creative Commons" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/fr/80x15.png" /></a> <a href="http://cyol.fr/blog/" rel="external">Cyol</a> : version 26, 21/01/2017<br />
                     <span class="textLicence">Cette aide de jeu est mise à disposition selon les termes de la <a rel="license" href="http://creativecommons.org/licenses/by/3.0/fr/">Licence Creative Commons Attribution 3.0 France</a>.
                     </span>
                 </div>

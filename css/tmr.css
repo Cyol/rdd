@@ -4,7 +4,7 @@
  * Author      : Cyol http://cyol.fr/blog                             *
  * Licence     : CC BY                                                *
  * Description : Feuille de style                                     *
- * Version     : 24                                                   *
+ * Version     : 26                                                   *
  **********************************************************************/
 
 body {
@@ -49,6 +49,7 @@ body {
 
 #infosHautRevant div:nth-of-type(3) .ui-slider-track .ui-btn-active,
 #infosHautRevant div:nth-of-type(7) .ui-slider-track .ui-btn-active,
+#infosHautRevant div:nth-of-type(10) .ui-slider-track .ui-btn-active,
 #infosHautRevant div:nth-of-type(4) .ui-slider-track{
     background: darkred;
 }

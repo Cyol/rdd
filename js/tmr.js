@@ -4,7 +4,7 @@
  * Author      : Cyol http://cyol.fr/blog                             *
  * Licence     : CC BY                                                *
  * Description : Fonctions générales                                  *
- * Version     : 24                                                   *
+ * Version     : 26                                                   *
  **********************************************************************/
 /**
  * Pour fonctionnement sans dupplication des canvas sur certains navigateurs (natif android par exemple)
@@ -362,6 +362,7 @@ var $cptReve;
 var $cptRefoulement;
 var $deplacement;
 var $rencontresAlternatives;
+var $perduTMR;
 var $infosVoyageEnTMR;
 
 /*********
@@ -727,8 +728,9 @@ function calculPourcentage()
     var carac   = parseInt($("#caracteristique").val());
     var comp    = parseInt($("#competence").val());
     var bonMal  = parseInt($("#bonusMalus").val());
+    var bonCase  = parseInt($("#bonusCase").val());
     var difficulte = comp+bonMal;
-    var pourcentage = getPourcentageChance(carac, difficulte);
+    var pourcentage = getPourcentageChance(carac, difficulte) + bonCase;
 
     var $sliderParticuliere = $('a[aria-labelledby="particuliere-label"]').parent();
     var $sliderSignificative = $('a[aria-labelledby="significative-label"]').parent();
@@ -867,8 +869,9 @@ function lanceD100()
     var carac   = parseInt($("#caracteristique").val());
     var comp    = parseInt($("#competence").val());
     var bonMal  = parseInt($("#bonusMalus").val());
+    var bonCase  = parseInt($("#bonusCase").val());
     var difficulte = comp+bonMal;
-    var pourcentage = getPourcentageChance(carac, difficulte);
+    var pourcentage = getPourcentageChance(carac, difficulte) + bonCase;
     var resultat = "Échec";
     var tache = "0";
     var qualite = -2;
@@ -1176,24 +1179,42 @@ function positionneJoueur()
     //récuperer les draw X et draw Y de sa coordonnée actuelle
     var drawCoord = hexagonGrid.getCanvasCoordonneeBasGaucheTile(positionJoueur.x, positionJoueur.y);
     contextTMR.drawImage(pionJoueur, drawCoord.drawx+15, drawCoord.drawy);
+}
 
+function majPerduTMR()
+{
+    perdu = parseInt($perduTMR.val()) === 1;
+    if(perdu)
+    {
+        canvasTMR.removeEventListener('click', selectionDepartTMR);
+        //Case aléatoire
+        var caseTMR = caseTMRAleatoire();
+        positionJoueur.x = caseTMR.x;
+        positionJoueur.y = caseTMR.y;
+        $("#demireve").val(infoDemireve(caseTMR.x, caseTMR.y));
+        //on libère le bouton "Montée en TMR"
+        $("#monteTMR").removeAttr("disabled").button('refresh').on("click", monteTMR);
+    }
+    else
+    {
+        majPlateauTMR();
+    }
 }
 
 function majPlateauTMR()
 {
     dessineTMR();
-    if(enTMR)
-    {
-        if(!perdu)
+    if(!perdu)
+        {
+        if(enTMR)
         {
             positionneJoueur();
         }
+        else
+        {
+            canvasTMR.addEventListener('click', selectionDepartTMR);
+        }
     }
-    else
-    {
-        canvasTMR.addEventListener('click', clickTMR);
-    }
-
 }
 
 /**
@@ -1288,6 +1309,8 @@ function clickDeplaceJoueur(e)
                 {
                     //Teleport au Hasard dans TMR
                     perdu = true;
+
+                    $perduTMR.val(perdu).slider('refresh');
                     logVoyage("Le tout pour le tout en sortant de la carte des TMR. Téléportation hasardeuse.");
                     caseTMR = caseTMRAleatoire();
                     deplaceJoueur(caseTMR.x, caseTMR.y);
@@ -1299,7 +1322,7 @@ function clickDeplaceJoueur(e)
     return false;
 }
 
-function clickTMR(e)
+function selectionDepartTMR(e)
 {
     var tile = clickCanvasTMR(e);
     if(tile.dansTMR)
@@ -1422,6 +1445,8 @@ function monteTMR()
     $cptRefoulement.slider( "option", "disabled", true );
     $deplacement.slider( "option", "disabled", true );
     $rencontresAlternatives.slider( "option", "disabled", true );
+    $perduTMR.slider( "option", "disabled", true );
+    $perduTMR.off('change', majPerduTMR);
 
     //On stocke la valeur de départ de l'Etat et de la fatigue
     etatDeDepart = parseInt($cptEtat.val());
@@ -1436,7 +1461,10 @@ function monteTMR()
     //Rencontres alternatives
     recontresAlternatives = parseInt($rencontresAlternatives.val()) === 1;
 
-    canvasTMR.removeEventListener('click', clickTMR);
+    //Perdu dans les TMR
+    perdu = parseInt($perduTMR.val()) === 1;
+
+    canvasTMR.removeEventListener('click', selectionDepartTMR);
 
     majPlateauTMR();
     var coutReve = 1+ vitesseDeplacement;
@@ -2001,6 +2029,7 @@ function rencontreMaitrisee(particuliere)
             //Case Humide à maitriser
             //Si perdu, on a assez d'info pour se retrouver
             perdu = false;
+            $perduTMR.val(perdu).slider('refresh');
             //On traite ça dans réponse à popup
             var listeCasesAtteignables = offset_hexaAPortee(OffsetCoord(positionJoueur.x, positionJoueur.y), rencontreActive.force);
             //Trouver le col min et le row min pour les "coller" à gauche et à droite du canvas...
@@ -2060,6 +2089,7 @@ function rencontreMaitrisee(particuliere)
         case RENCONTRE_CHANGEUR:
             //Téléporte sur une case de même genre connue, sans limitation de distance
             perdu = false;
+            $perduTMR.val(perdu).slider('refresh');
             var listeCasesType = getListeCasesType(hexagones[getHexagoneIdParCoordonnees(positionJoueur.x, positionJoueur.y)].oH_type);
             //Arrivée sur nouvelle case sans dépense de fatigue, ni de jet de Rencontre
             //Case Humide à maitriser
@@ -2228,6 +2258,7 @@ function rencontreNonMaitrisee(echecTotal)
             positionJoueur.y = hexagones[idNouvelleCase].oH_y;
             //Ne plus donner info Coordonnée et Nom, ne plus afficher Demi-Rêve
             perdu = true;
+            $perduTMR.val(perdu).slider('refresh');
             //Arrivée sur nouvelle case sans dépense de fatigue, ni de jet de Rencontre
             var $hexagoneDemiReve = hexagones[getHexagoneIdParCoordonnees(positionJoueur.x, positionJoueur.y)];
             var typeTerrainHexagoneDemiReve = typeTerrain[$hexagoneDemiReve.oH_type];
@@ -2289,6 +2320,7 @@ function rencontreNonMaitrisee(echecTotal)
             direction = lanceD(1, 6, false);
             //Ne plus donner info Coordonnée et Nom, ne plus afficher Demi-Rêve
             perdu = true;
+            $perduTMR.val(perdu).slider('refresh');
             do{
                 logVoyage("Bloqué dans le Tourbillon...");
                 roundEnTMR++;
@@ -2368,12 +2400,14 @@ function rencontreNonMaitrisee(echecTotal)
                         idHexaArrive = getHexagoneIdParCoordonnees(caseTMR.x, caseTMR.y);
                         logVoyage(textDerive);
                         perdu = true;
+                        $perduTMR.val(perdu).slider('refresh');
                     }
                     if($.inArray(hexagones[idHexaArrive].oH_type, terrainsHumides)>-1)
                     {
                         //emporté sur une case humide voisine
                         logVoyage(textDerive);
                         perdu = true;
+                        $perduTMR.val(perdu).slider('refresh');
                     }
                     cpt++;
                 }
@@ -2382,6 +2416,7 @@ function rencontreNonMaitrisee(echecTotal)
                 if(perdu)
                 {
                     perdu = false;
+                    $perduTMR.val(perdu).slider('refresh');
                     positionJoueur.x = hexagones[idHexaArrive].oH_x;
                     positionJoueur.y = hexagones[idHexaArrive].oH_y;
                     //Ne plus donner info Coordonnée et Nom, ne plus afficher Demi-Rêve
@@ -2400,6 +2435,7 @@ function rencontreNonMaitrisee(echecTotal)
             //si les rêves sont parcourus de déchirures, les Terres Médianes, elles, recèlent des Failles, créées par des tremblements de rêve. Le haut-rêvant doit combattre la faille qui vient de s'ouvrir sous ses pieds. S'il réussit, le gouffre se referme. Si c'est raté, il tombe dedans et subit une réinsertion aléatoire.
             //Teleport au Hasard dans TMR
             perdu = true;
+            $perduTMR.val(perdu).slider('refresh');
             logVoyage("Vous tombez dans la " + RENCONTRE_ALT_FAILLE + ", qui sait où vous êtes maintenant...");
             caseTMR = caseTMRAleatoire();
             positionJoueur.x = caseTMR.x;
@@ -2454,6 +2490,8 @@ function quitteTMR()
     $cptRefoulement.slider( "option", "disabled", false );
     $deplacement.slider( "option", "disabled", false );
     $rencontresAlternatives.slider( "option", "disabled", false );
+    $perduTMR.slider( "option", "disabled", false );
+    $perduTMR.on('change', majPerduTMR);
 
     majPlateauTMR();
 
@@ -2533,8 +2571,10 @@ function demarrerPartie()
     $("#aideTMRInfos").hide();
     jeuEnCours = true;
     hexagonGrid.drawHexGrid(LIGNES,COLONNES,50,50);
-
+    perdu = false;
     majPlateauTMR();
+    //ecouteur sur perduTMR
+    $perduTMR.on('change', majPerduTMR);
 }
 
 function defineObjetsDom()
@@ -2551,6 +2591,7 @@ function defineObjetsDom()
     $cptRefoulement = $( "#refoulement" );
     $deplacement = $( "#deplacement" );
     $rencontresAlternatives = $( "#rencontresAlternatives" );
+    $perduTMR = $( "#perduTMR" );
 
     //informations
     $infosVoyageEnTMR = $("#voyageEnTMR");
@@ -2621,6 +2662,7 @@ $( document).on("pageshow","#Outils", function() {
     $("#caracteristique").change(calculPourcentage);
     $("#competence").change(calculPourcentage);
     $("#bonusMalus").change(calculPourcentage);
+    $("#bonusCase").change(calculPourcentage);
     calculPourcentage();
     demireveAleatoire();
     lanceDdr();
